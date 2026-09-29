@@ -101,8 +101,17 @@ data class Topo(
         val font: String? = null
     )
 
+    /**
+     * Where the copyright is drawn. Its text isn't stored: it's generated with [text] when the image is rendered, so it
+     * always shows the year the image was generated.
+     */
     @Serializable
-    data class Copyright(val text: String, val corner: Corner = Corner.BOTTOM_RIGHT)
+    data class Copyright(val corner: Corner = Corner.BOTTOM_RIGHT) {
+        companion object {
+            /** The copyright text for an image generated in [year]. */
+            fun text(year: Int): String = "© Àlex Mora, Escalar Alcoià i Comtat $year"
+        }
+    }
 
     @Serializable
     enum class Corner { TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT }

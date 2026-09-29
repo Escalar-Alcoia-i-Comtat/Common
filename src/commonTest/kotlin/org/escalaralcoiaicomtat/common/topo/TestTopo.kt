@@ -26,7 +26,7 @@ class TestTopo {
             routes = listOf(Topo.Route(pathId = pathId, edges = listOf("e1"))),
             bolts = listOf(Topo.Bolt(0.2, 0.5, pathId)),
             labels = listOf(Topo.Label(0.5, 0.5, "20 m")),
-            copyright = Topo.Copyright("© EscalarAlcoiaiComtat", Topo.Corner.BOTTOM_RIGHT)
+            copyright = Topo.Copyright(Topo.Corner.BOTTOM_RIGHT)
         )
     }
 
@@ -41,6 +41,18 @@ class TestTopo {
     fun `test unknown keys are ignored`() {
         val json = """{"version":1,"imageWidth":10,"imageHeight":10,"somethingNew":true}"""
         assertEquals(Topo(imageWidth = 10, imageHeight = 10), Topo.json.decodeFromString(Topo.serializer(), json))
+    }
+
+    @Test
+    fun `test copyright texts stored by older versions are ignored`() {
+        val json = """{"version":1,"imageWidth":10,"imageHeight":10,"copyright":{"text":"© 2020","corner":"TOP_LEFT"}}"""
+        val topo = Topo.json.decodeFromString(Topo.serializer(), json)
+        assertEquals(Topo.Copyright(Topo.Corner.TOP_LEFT), topo.copyright)
+    }
+
+    @Test
+    fun `test copyright text`() {
+        assertEquals("© Àlex Mora, Escalar Alcoià i Comtat 2026", Topo.Copyright.text(2026))
     }
 
     @Test
